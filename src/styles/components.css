@@ -852,15 +852,23 @@
     padding: 18px var(--gutter);
     gap: 4px;
     border-bottom: 1px solid var(--line);
-    transform: translateY(-120%);
-    transition: transform 0.4s var(--ease);
+    transform: translateY(-130%);
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s var(--ease), visibility 0.4s, opacity 0.4s;
   }
   .nav__links .jelly-radio {
     flex-wrap: wrap;
     justify-content: center;
     row-gap: 6px;
   }
-  .nav__links.open { transform: none; }
+  .nav__links.open {
+    transform: none;
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+  }
   .nav__burger { display: flex; }
   .nav__dl { display: none; }
   .about__grid { grid-template-columns: 1fr; }
@@ -882,4 +890,9 @@
   }
   .contact__rows, .contact__actions { flex-direction: column; width: 100%; }
   .contact__row, .contact__actions .btn { justify-content: center; }
+  /* 小屏导航：隐藏联系我按钮与英文名，避免挤压品牌 */
+  .nav__cta .btn { display: none; }
+  .nav__name { font-size: 14.5px; }
+  .nav__name i { display: none; }
+  .hero__title { font-size: clamp(30px, 9.2vw, 40px); line-height: 1.25; }
 }
