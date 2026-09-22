@@ -7,8 +7,8 @@ import { useReveal } from '../hooks/useReveal.js'
 /* 荣誉奖项照片：自动滑动轮播 */
 function HonorsCarousel() {
   const slides = [
-    { src: '/honors-1.jpg', alt: '杰出才能奖 · 思廷书院高桌晚宴' },
-    { src: '/honors-2.jpg', alt: '思廷阳光奖学金 · 高桌晚宴' },
+    { src: './honors-1.jpg', alt: '杰出才能奖 · 思廷书院高桌晚宴' },
+    { src: './honors-2.jpg', alt: '思廷阳光奖学金 · 高桌晚宴' },
   ]
   const [i, setI] = useState(0)
 
@@ -53,7 +53,7 @@ export default function About() {
           {/* Left: avatar + contact */}
           <div className={`about__aside reveal ${shown ? 'in' : ''}`} ref={ref}>
             <div className="about__avatar">
-              <img src="/avatar.jpg" alt={`${profile.name} 的照片`} />
+              <img src="./avatar.jpg" alt={`${profile.name} 的照片`} />
             </div>
             <div className="about__contact">
               <a className="about__row" href={`mailto:${profile.email}`}>
