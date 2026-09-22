@@ -31,12 +31,6 @@ export default function Hero() {
           <br />
           城市规划 · 学术社团运营 · 双语主持 · 活动策划与接待
         </p>
-
-        <div className="hero__actions">
-          <a className="btn btn-primary" href="#contact">
-            <Icon name="mail" size={17} /> 联系我
-          </a>
-        </div>
       </div>
 
       <a className="hero__scroll" href="#about" aria-label="scroll">
