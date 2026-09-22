@@ -13,7 +13,7 @@ export default function Hero() {
           playsInline
           poster=""
         >
-          <source src="/hero.mp4" type="video/mp4" />
+          <source src="./hero.mp4" type="video/mp4" />
         </video>
         <div className="hero__overlay" />
       </div>
