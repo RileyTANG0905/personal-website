@@ -48,7 +48,7 @@ export default function Skills() {
 
         <div className="skills__host">
           <div className="skills__host-photo">
-            <img src="/skills-host.jpg" alt="主持现场" loading="lazy" />
+            <img src="./skills-host.jpg" alt="主持现场" loading="lazy" />
           </div>
           <div className="skills__host-info">
             <span className="eyebrow">双语主持 / 礼仪</span>
