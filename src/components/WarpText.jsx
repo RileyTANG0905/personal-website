@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Renderer, Program, Mesh, Triangle, Texture } from 'ogl';
 import './WarpText.css';
 
@@ -226,6 +226,7 @@ const WarpText = ({
   style
 }) => {
   const containerRef = useRef(null);
+  const [failed, setFailed] = useState(false);
   const propsRef = useRef({
     text,
     color,
@@ -317,6 +318,7 @@ const WarpText = ({
       gl = renderer.gl;
     } catch (error) {
       console.warn('WarpText: WebGL could not be initialized.', error);
+      setFailed(true);
       return undefined;
     }
 
@@ -370,29 +372,31 @@ const WarpText = ({
 
     const rasterize = async () => {
       const version = ++rasterVersion;
-      if (document.fonts?.ready) {
-        try {
-          await document.fonts.ready;
-        } catch (error) {
-          void error;
+      try {
+        if (document.fonts?.ready) {
+          // 字体加载最多等 2.5 秒，避免个别环境 Promise 永不 resolve 导致标题空白
+          await Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 2500))]);
         }
+        if (disposed || contextLost || version !== rasterVersion) return;
+
+        const rect = container.getBoundingClientRect();
+        if (rect.width <= 0 || rect.height <= 0) return;
+
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const textCanvas = buildTextCanvas({
+          container,
+          width: rect.width,
+          height: rect.height,
+          dpr,
+          props: propsRef.current
+        });
+        texture.image = textCanvas;
+        texture.needsUpdate = true;
+        renderOnce();
+      } catch (error) {
+        console.warn('WarpText: rasterize failed.', error);
+        setFailed(true);
       }
-      if (disposed || contextLost || version !== rasterVersion) return;
-
-      const rect = container.getBoundingClientRect();
-      if (rect.width <= 0 || rect.height <= 0) return;
-
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const textCanvas = buildTextCanvas({
-        container,
-        width: rect.width,
-        height: rect.height,
-        dpr,
-        props: propsRef.current
-      });
-      texture.image = textCanvas;
-      texture.needsUpdate = true;
-      renderOnce();
     };
 
     const resize = () => {
@@ -519,6 +523,19 @@ const WarpText = ({
       if (canvas.parentNode === container) container.removeChild(canvas);
     };
   }, []);
+
+  if (failed) {
+    return (
+      <div
+        className={`warp-text warp-text--fallback ${className}`.trim()}
+        style={{ color, ...style }}
+        role="heading"
+        aria-level={2}
+      >
+        {text}
+      </div>
+    );
+  }
 
   return (
     <div ref={containerRef} className={`warp-text ${className}`.trim()} style={style} role="img" aria-label={text} />
